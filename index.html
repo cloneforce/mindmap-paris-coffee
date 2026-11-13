@@ -329,6 +329,7 @@
     
   </footer>
 
+  <script src="https://cloneforce.github.io/clip-library/db.js"></script>
   <script>
     const TREE_DATA = {"title": "Best iced latte in Paris — while the city is on fire", "id": "0_0_0", "time": "00:00 - 00:48", "children": [{"title": "The challenge", "children": [{"title": "Hunt: 5–7 trendiest shops · score size · price · taste", "id": "n01", "time": "00:26 - 00:48"}]}, {"title": "Partisan Café Artisanal · 7", "children": [{"title": "First stop: Partisan Café Artisanal", "id": "n02", "time": "01:11 - 01:47"}, {"title": "Light roast · nice taste · pretty little in size", "id": "n03", "time": "02:28 - 02:45"}, {"title": "French stranger rates 7/10 — host agrees: “I’ll say 7 too. It’s yours.”", "id": "n04", "time": "02:47 - 03:18"}]}, {"title": "Paris on fire", "children": [{"title": "“Do not breathe this air” — fires & wreckage in the street", "id": "n05", "time": "01:28 - 01:50"}, {"title": "“The city is clearly super peaceful today” — perfect day for a coffee review", "id": "n06", "time": "03:33 - 03:52"}, {"title": "Location #2 closed because Paris is crazy — skip to #3", "id": "n07", "time": "04:07 - 04:32"}, {"title": "République too wild — police like war · pivot to Café Nuances", "id": "n08", "time": "08:47 - 09:12"}]}, {"title": "Cortado · 8.5", "children": [{"title": "Cortado — coffee #2 (after the closed stop)", "id": "n09", "time": "04:37 - 05:00"}, {"title": "Stranger rates 7/10 · “It’s yours. Enjoy.”", "id": "n10", "time": "05:00 - 05:30"}]}, {"title": "Café Kitsuné Vertbois · 8.5", "children": [{"title": "Closed for the mess — then opened just for him · iced latte, regular milk", "id": "n11", "time": "06:24 - 06:54"}, {"title": "€5.50 · host rates 8.5/10", "id": "n12", "time": "07:15 - 07:37"}, {"title": "Passerby rates ~5–6/10 · “it’s yours now”", "id": "n13", "time": "07:36 - 07:55"}]}, {"title": "Café Nuances · 9 ★", "children": [{"title": "Fourth stop: Café Nuances (the République pick was unreachable)", "id": "n14", "time": "08:47 - 09:12"}, {"title": "Host: soft but nice", "id": "n15", "time": "10:00 - 10:23"}, {"title": "Regular iced coffee, no sugar · stranger’s first iced coffee → 7/10", "id": "n16", "time": "11:05 - 11:35"}]}, {"title": "Final rankings", "children": [{"title": "Final ratings: Nuances 9 · Cortado 8.5 · Kitsuné 8.5 · Partisan 7 · Sevenly Heart ?", "id": "n17", "time": "13:11 - 13:48"}]}]};
     const PLAYABLE_NODES = [{"id": "0_0_0", "code": "", "title": "Best iced latte in Paris — while the city is on fire", "timeStr": "00:00 - 00:48"}, {"id": "n01", "code": "", "title": "Hunt: 5–7 trendiest shops · score size · price · taste", "timeStr": "00:26 - 00:48"}, {"id": "n02", "code": "", "title": "First stop: Partisan Café Artisanal", "timeStr": "01:11 - 01:47"}, {"id": "n03", "code": "", "title": "Light roast · nice taste · pretty little in size", "timeStr": "02:28 - 02:45"}, {"id": "n04", "code": "", "title": "French stranger rates 7/10 — host agrees: “I’ll say 7 too. It’s yours.”", "timeStr": "02:47 - 03:18"}, {"id": "n05", "code": "", "title": "“Do not breathe this air” — fires & wreckage in the street", "timeStr": "01:28 - 01:50"}, {"id": "n06", "code": "", "title": "“The city is clearly super peaceful today” — perfect day for a coffee review", "timeStr": "03:33 - 03:52"}, {"id": "n07", "code": "", "title": "Location #2 closed because Paris is crazy — skip to #3", "timeStr": "04:07 - 04:32"}, {"id": "n08", "code": "", "title": "République too wild — police like war · pivot to Café Nuances", "timeStr": "08:47 - 09:12"}, {"id": "n09", "code": "", "title": "Cortado — coffee #2 (after the closed stop)", "timeStr": "04:37 - 05:00"}, {"id": "n10", "code": "", "title": "Stranger rates 7/10 · “It’s yours. Enjoy.”", "timeStr": "05:00 - 05:30"}, {"id": "n11", "code": "", "title": "Closed for the mess — then opened just for him · iced latte, regular milk", "timeStr": "06:24 - 06:54"}, {"id": "n12", "code": "", "title": "€5.50 · host rates 8.5/10", "timeStr": "07:15 - 07:37"}, {"id": "n13", "code": "", "title": "Passerby rates ~5–6/10 · “it’s yours now”", "timeStr": "07:36 - 07:55"}, {"id": "n14", "code": "", "title": "Fourth stop: Café Nuances (the République pick was unreachable)", "timeStr": "08:47 - 09:12"}, {"id": "n15", "code": "", "title": "Host: soft but nice", "timeStr": "10:00 - 10:23"}, {"id": "n16", "code": "", "title": "Regular iced coffee, no sugar · stranger’s first iced coffee → 7/10", "timeStr": "11:05 - 11:35"}, {"id": "n17", "code": "", "title": "Final ratings: Nuances 9 · Cortado 8.5 · Kitsuné 8.5 · Partisan 7 · Sevenly Heart ?", "timeStr": "13:11 - 13:48"}];
@@ -437,6 +438,9 @@
         let inner = `<span class="node-title">${node.title}</span>`;
         if (node.time) {
           inner += `<span class="mm-time">${node.time}</span>`;
+        }
+        if (isClickable && window.QishenClipDB) {
+          inner += QishenClipDB.checkboxMarkup(node.id);
         }
         if (node.children && node.children.length > 0) {
           const collClass = node.collapsed ? "collapsed" : "";
@@ -597,7 +601,9 @@
         const foldEl = e.target.closest(".mm-fold");
         const nodeEl = e.target.closest(".mm-node");
 
-        if (foldEl) {
+        if (e.target.closest(".mm-save")) {
+          potentialClickTarget = null;
+        } else if (foldEl) {
           potentialClickTarget = { type: "fold", key: foldEl.getAttribute("data-key"), x: e.clientX, y: e.clientY };
         } else if (nodeEl && nodeEl.dataset.nodeId) {
           potentialClickTarget = { type: "node", id: nodeEl.dataset.nodeId, x: e.clientX, y: e.clientY };
